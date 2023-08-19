@@ -1,4 +1,7 @@
-class Node:
+from display import Tree
+
+
+class Node(Tree):
 
     def __init__(self, key, parent, left, right, height, sum):
         self.key = key
@@ -7,56 +10,6 @@ class Node:
         self.right = right
         self.height = height
         self.sum = sum
-
-    def display(self):
-        lines, *_ = self._display_aux()
-        for line in lines:
-            print(line)
-
-    def _display_aux(self):
-        """Returns list of strings, width, height, and horizontal coordinate of the root."""
-        # No child.
-        if not self.right.height and not self.left.height:
-            line = '%s' % self.key
-            width = len(line)
-            height = 1
-            middle = width // 2
-            return [line], width, height, middle
-
-        # Only left child.
-        if not self.right.height:
-            lines, n, p, x = self.left._display_aux()
-            s = '%s' % self.key
-            u = len(s)
-            first_line = (x + 1) * ' ' + (n - x - 1) * '_' + s
-            second_line = x * ' ' + '/' + (n - x - 1 + u) * ' '
-            shifted_lines = [line + u * ' ' for line in lines]
-            return [first_line, second_line] + shifted_lines, n + u, p + 2, n + u // 2
-
-        # Only right child.
-        if not self.left.height:
-            lines, n, p, x = self.right._display_aux()
-            s = '%s' % self.key
-            u = len(s)
-            first_line = s + x * '_' + (n - x) * ' '
-            second_line = (u + x) * ' ' + '\\' + (n - x - 1) * ' '
-            shifted_lines = [u * ' ' + line for line in lines]
-            return [first_line, second_line] + shifted_lines, n + u, p + 2, u // 2
-
-        # Two children.
-        left, n, p, x = self.left._display_aux()
-        right, m, q, y = self.right._display_aux()
-        s = '%s' % self.key
-        u = len(s)
-        first_line = (x + 1) * ' ' + (n - x - 1) * '_' + s + y * '_' + (m - y) * ' '
-        second_line = x * ' ' + '/' + (n - x - 1 + u + y) * ' ' + '\\' + (m - y - 1) * ' '
-        if p < q:
-            left += [n * ' '] * (q - p)
-        elif q < p:
-            right += [m * ' '] * (p - q)
-        zipped_lines = zip(left, right)
-        lines = [first_line, second_line] + [a + u * ' ' + b for a, b in zipped_lines]
-        return lines, n + m + u, max(p, q) + 2, n + u // 2
 
 
 class FakeNode:
@@ -80,7 +33,8 @@ class AVLTree:
         self.root = root
 
     def print_in_order(self):
-
+        print('{:^12}{:^12}{:^12}{:^12}{:^12}{:^12}'.format(
+            'key', 'parent', 'left', 'right', 'height', 'sum'))
         def in_order(r):
             if r.left.height:
                 in_order(r.left)
@@ -552,9 +506,11 @@ def test2():
     n = 20
     for i in range(n):
         tree = merge(tree, AVLTree(Node(i + 1, None, fake_node, fake_node, 1, i + 1)))
+        print('{:-^72}'.format('tree'))
         tree.root.display()
+        print('{:-^72}'.format('table'))
         tree.print_in_order()
-        print('-' * 72)
+        print('\n')
 
 
 if __name__ == '__main__':
@@ -563,3 +519,4 @@ if __name__ == '__main__':
     except (AssertionError, ValueError):
         print('Incorrect input')
     # test()
+    # test2()
