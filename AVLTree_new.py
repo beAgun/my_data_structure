@@ -438,6 +438,59 @@ def find_sum_on_segment(tree, left_point, right_point):
 
 
 def test():
+    def check(*strings, fl=1):
+        tree = AVLTree()
+        ans = tuple()
+        s = 0
+
+        if fl == 1:
+            f = lambda x: ((x % 1000000001) + (s % 1000000001)) % 1000000001
+        elif fl == 2:
+            f = lambda x: x
+
+        for string in strings:
+            query, val = string.split(maxsplit=1)
+
+            if query == '+':
+                val = int(val)
+                tree.insert(f(val))
+
+            elif query == '-':
+                val = int(val)
+                tree.delete(f(val))
+
+            elif query == '?':
+                val = int(val)
+                ans += ('Found' if tree.find(tree.root, f(val)) else 'Not found', )
+
+            elif query == 's':
+                left_point, right_point = map(int, val.split())
+                (s, tree) = find_sum_on_segment(tree, f(left_point), f(right_point))
+                ans += (str(s), )
+
+        return ans
+
+    data1 = ('? 1', '+ 1', '? 1', '+ 2', 's 1 2', '+ 1000000000', '? 1000000000', '- 1000000000',
+             '? 1000000000', 's 999999999 1000000000', '- 2', '? 2', '- 0', '+ 9', 's 0 9')
+    ans1 = ('Not found', 'Found', '3', 'Found', 'Not found', '1', 'Not found', '10')
+
+    data2 = ('? 0', '+ 0', '? 0', '- 0', '? 0')
+    ans2 = ('Not found', 'Found', 'Not found')
+
+    data3 = ('+ 491572259', '? 491572259', '? 899375874', 's 310971296 877523306', '+ 352411209')
+    ans3 = ('Found', 'Not found', '491572259')
+
+    assert check(*data1) == ans1
+    assert check(*data2) == ans2
+    assert check(*data3) == ans3
+
+    assert check('+ 1', '+ 2', '+ 3', 's 1 3') == ('6',)
+    assert check('s 1 10', '+ 5', 's 10 12', 's 1 10', 's 20 1') == ('0', '0', '5', '0')
+    assert check('+ 4', 's 1 4', '- 4', 's 4 5') == ('4', '0')
+
+    print('Everything is OK')
+
+
     import random
     import time
 
@@ -452,39 +505,42 @@ def test():
         acc += (t1 - t0)
     for i in range(n):
         left_point = random.randint(0, 10 ** 9)
-        right_point = random.randint(0, 10 ** 9)
+        right_point = random.randint(left_point, 10 ** 9)
         t0 = time.perf_counter()
         (res, tree) = find_sum_on_segment(tree, left_point, right_point)
         t1 = time.perf_counter()
         acc += (t1 - t0)
-
+    
     print('Everything is OK. Execution time is {}'.format(acc))
 
 
 def main():
     tree = AVLTree()
     s = 0
-    f = lambda x: ((x % 1000000001) + (s % 1000000001)) % 1000000001
     n = int(input())
+    assert 1 <= n <= 10e5
 
     for i in range(n):
         query, val = input().split(maxsplit=1)
+        assert query in ('+', '-', '?', 's')
+        if query in ('+', '-', '?'):
+            val = int(val)
+            assert 0 <= val <= 10e9
+        else:
+            left_point, right_point = map(int, val.split())
+            assert 0 <= left_point <= right_point <= 10e9
 
         if query == '+':
-            val = int(val)
-            tree.insert(f(val))
+            tree.insert(val)
 
         elif query == '-':
-            val = int(val)
-            tree.delete(f(val))
+            tree.delete(val)
 
         elif query == '?':
-            val = int(val)
-            print('Found' if tree.find(tree.root, f(val)) else 'Not found')
+            print('Found' if tree.find(tree.root, val) else 'Not found')
 
         elif query == 's':
-            left_point, right_point = map(int, val.split())
-            (s, tree) = find_sum_on_segment(tree, f(left_point), f(right_point))
+            (s, tree) = find_sum_on_segment(tree, left_point, right_point)
             print(s)
 
         #if tree.root.height:
@@ -501,7 +557,9 @@ def test2():
         print('-' * 72)
 
 
-
 if __name__ == '__main__':
-    #main()
-    test()
+    try:
+        main()
+    except (AssertionError, ValueError):
+        print('Incorrect input')
+    # test()
