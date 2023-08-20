@@ -444,18 +444,18 @@ def test():
 
     print('Everything is OK')
 
-    n = 5 * 10e4
+    n = 5 * 10**4
     tree = AVLTree()
     acc = 0
     for i in range(n):
-        val = random.randint(0, 10e9)
+        val = random.randint(0, 10**9)
         t0 = time.perf_counter()
         tree.insert(val)
         t1 = time.perf_counter()
         acc += (t1 - t0)
     for i in range(n):
-        left_point = random.randint(0, 10e9)
-        right_point = random.randint(left_point, 10e9)
+        left_point = random.randint(0, 10**9)
+        right_point = random.randint(left_point, 10**9)
         t0 = time.perf_counter()
         (res, tree) = find_sum_on_segment(tree, left_point, right_point)
         t1 = time.perf_counter()
@@ -468,17 +468,17 @@ def main():
     tree = AVLTree()
     s = 0
     n = int(input())
-    assert 1 <= n <= 10e5
+    assert 1 <= n <= 10**5
 
     for i in range(n):
         query, val = input().split(maxsplit=1)
         assert query in ('+', '-', '?', 's')
         if query in ('+', '-', '?'):
             val = int(val)
-            assert 0 <= val <= 10e9
+            assert 0 <= val <= 10**9
         else:
             left_point, right_point = map(int, val.split())
-            assert 0 <= left_point <= right_point <= 10e9
+            assert 0 <= left_point <= right_point <= 10**9
 
         if query == '+':
             tree.insert(val)
