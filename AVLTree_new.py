@@ -444,18 +444,18 @@ def test():
 
     print('Everything is OK')
 
-    n = 50000
+    n = 5 * 10e4
     tree = AVLTree()
     acc = 0
     for i in range(n):
-        val = random.randint(0, 10 ** 9)
+        val = random.randint(0, 10e9)
         t0 = time.perf_counter()
         tree.insert(val)
         t1 = time.perf_counter()
         acc += (t1 - t0)
     for i in range(n):
-        left_point = random.randint(0, 10 ** 9)
-        right_point = random.randint(left_point, 10 ** 9)
+        left_point = random.randint(0, 10e9)
+        right_point = random.randint(left_point, 10e9)
         t0 = time.perf_counter()
         (res, tree) = find_sum_on_segment(tree, left_point, right_point)
         t1 = time.perf_counter()
