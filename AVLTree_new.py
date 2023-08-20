@@ -1,4 +1,6 @@
 from display import Tree
+import random
+import time
 
 
 class Node(Tree):
@@ -35,6 +37,7 @@ class AVLTree:
     def print_in_order(self):
         print('{:^12}{:^12}{:^12}{:^12}{:^12}{:^12}'.format(
             'key', 'parent', 'left', 'right', 'height', 'sum'))
+
         def in_order(r):
             if r.left.height:
                 in_order(r.left)
@@ -392,15 +395,12 @@ def find_sum_on_segment(tree, left_point, right_point):
 
 
 def test():
-    def check(*strings, fl=1):
+    def check(*strings):
         tree = AVLTree()
         ans = tuple()
         s = 0
 
-        if fl == 1:
-            f = lambda x: ((x % 1000000001) + (s % 1000000001)) % 1000000001
-        elif fl == 2:
-            f = lambda x: x
+        f = lambda x: ((x % 1000000001) + (s % 1000000001)) % 1000000001
 
         for string in strings:
             query, val = string.split(maxsplit=1)
@@ -443,10 +443,6 @@ def test():
     assert check('+ 4', 's 1 4', '- 4', 's 4 5') == ('4', '0')
 
     print('Everything is OK')
-
-
-    import random
-    import time
 
     n = 50000
     tree = AVLTree()
@@ -497,8 +493,8 @@ def main():
             (s, tree) = find_sum_on_segment(tree, left_point, right_point)
             print(s)
 
-        #if tree.root.height:
-            #tree.root.display()
+        # if tree.root.height:
+            # tree.root.display()
 
 
 def test2():
