@@ -6,11 +6,8 @@ import time
 class Node(Tree):
 
     def __init__(self, key, parent, left, right, height, sum):
-        self.key = key
+        super().__init__(key, left, right, height)
         self.parent = parent
-        self.left = left
-        self.right = right
-        self.height = height
         self.sum = sum
 
 
