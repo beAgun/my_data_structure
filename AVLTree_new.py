@@ -463,7 +463,6 @@ def test():
 
 def main():
     tree = AVLTree()
-    s = 0
     n = int(input())
     assert 1 <= n <= 10**5
 
@@ -473,20 +472,18 @@ def main():
         if query in ('+', '-', '?'):
             val = int(val)
             assert 0 <= val <= 10**9
+
+            if query == '+':
+                tree.insert(val)
+            elif query == '-':
+                tree.delete(val)
+            elif query == '?':
+                print('Found' if tree.find(tree.root, val) else 'Not found')
+
         else:
             left_point, right_point = map(int, val.split())
             assert 0 <= left_point <= right_point <= 10**9
 
-        if query == '+':
-            tree.insert(val)
-
-        elif query == '-':
-            tree.delete(val)
-
-        elif query == '?':
-            print('Found' if tree.find(tree.root, val) else 'Not found')
-
-        elif query == 's':
             (s, tree) = find_sum_on_segment(tree, left_point, right_point)
             print(s)
 
